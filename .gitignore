@@ -14,8 +14,8 @@ embedtest.html
 embedtestbad.html
 favicon.ico
 fullscreen.html
-index.html
 manifest.webmanifest
-privacy.html
+/privacy.html
 robots.txt
 sw.js
+/index.html
