@@ -8,6 +8,24 @@
   <title>HyperMimic - 兼顾实用、快速与美观</title>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <style>
+
+    /* 定义滚动条宽度和背景颜色 */
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 99px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #555;
+    }
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: none;
+    }
     /* ============================================================
        1. CSS 变量 & 重置 + 全局禁止选择
        ============================================================ */
@@ -373,14 +391,14 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
+      height: 10px;
       background: linear-gradient(90deg, var(--primary), var(--primary-dark));
       opacity: 0;
       transition: opacity 0.4s;
     }
 
     .feature-card:hover .glow-line {
-      opacity: 1;
+      opacity: 0.5;
     }
 
     /* ============================================================
@@ -877,6 +895,75 @@
     }
 
     /* ============================================================
+       12. 视觉预览 (Showcase)
+       ============================================================ */
+    .showcase-section {
+      padding: 90px 0 40px;
+      text-align: center;
+    }
+    .showcase-stage {
+      position: relative;
+      max-width: 1000px;
+      margin: 48px auto 0;
+      perspective: 2600px;
+    }
+    .showcase-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 85%;
+      height: 85%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse at center, var(--primary-glow), transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+      pointer-events: none;
+      animation: glowPulse 8s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50%      { opacity: 0.9; transform: translate(-50%, -50%) scale(1.12); }
+    }
+    .showcase-window {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      opacity: 0;
+      filter: blur(10px);
+      transform: rotateY(calc(var(--tilt-y, 0) * 1deg)) rotateX(calc(var(--tilt-x, 0) * 1deg));
+      transition: transform 0.25s ease, opacity 0.8s ease, filter 0.8s ease;
+      will-change: transform;
+    }
+    .showcase-section.in-view .showcase-window {
+      opacity: 1;
+      filter: blur(0);
+    }
+    .screenshot-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1280 / 720;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #15161a;
+    }
+    .screenshot {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .screenshot.active {
+      opacity: 1;
+    }
+    /* ============================================================
        11. 响应式
        ============================================================ */
     @media (max-width: 640px) {
@@ -896,6 +983,10 @@
       .version-selector { width: 100%; justify-content: center; }
       .changelog-entry { padding: 20px 18px; }
       .changelog-entry .version-tag { font-size: 1.25rem; }
+      .showcase-section { padding: 60px 0 30px; }
+      .showcase-window { transform: none !important; max-width: 100%; }
+      .showcase-stage { perspective: none; margin-top: 30px; }
+      .screenshot-frame { aspect-ratio: 16 / 10; }
     }
 
     @media (min-width: 641px) and (max-width: 1024px) {
@@ -958,7 +1049,7 @@
       <p data-l10n="heroDesc">兼顾实用、快速与美观</p>
       <div class="hero-actions">
         <a href="#download" class="btn btn-primary">
-          <span data-l10n="downloadNow">立即下载</span>
+          <span data-l10n="downloadNow">获取桌面端</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 -960 960 960">
             <path fill="currentColor" d="M480-294.212 265.287-508.925l47.838-47.837 133.5 133.5V-836h66.75v412.738l133.5-133.5 47.837 47.837zM190.75-124c-17.8 0-33.375-6.675-46.725-20.025C130.675-157.375 124-172.95 124-190.75v-159.088h66.75v159.088h578.5v-159.087H836v159.087c0 17.8-6.675 33.375-20.025 46.725C802.625-130.675 787.05-124 769.25-124z"></path>
           </svg>
@@ -969,9 +1060,27 @@
             <path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path>
           </svg>
         </a>
-        <a href="#features" class="btn btn-secondary">
+        <a href="#showcase" class="btn btn-secondary">
           <span data-l10n="learnMore">了解更多</span>
         </a>
+      </div>
+    </section>
+
+    <!-- ===== 视觉预览 (Showcase) ===== -->
+    <section class="showcase-section" id="showcase">
+      <div class="section-label" data-l10n="showcaseLabel">✦ 视觉预览 ✦</div>
+      <h2 class="section-title" data-l10n="showcaseTitle">看见每一处用心</h2>
+      <p class="section-desc" data-l10n="showcaseDesc">真正为创作者设计的界面，每一个细节都恰到好处</p>
+
+      <div class="showcase-stage">
+        <div class="showcase-glow"></div>
+
+        <div class="showcase-window" id="showcaseWindow">
+          <div class="screenshot-frame" id="screenshotFrame">
+            <img class="screenshot screenshot-zh active" src="screenshot_zh-cn.png" alt="HyperMimic 中文界面" draggable="false" />
+            <img class="screenshot screenshot-en" src="screenshot_en.png" alt="HyperMimic English UI" draggable="false" />
+          </div>
+        </div>
       </div>
     </section>
 
@@ -983,25 +1092,31 @@
       <div class="feature-grid" id="featureGrid">
         <div class="feature-card" data-delay="0">
           <div class="glow-line"></div>
-          <span class="icon">⚡</span>
+          <img alt="speed" class="icon" src="assets/feat-speed.svg" width="50">
           <h3 data-l10n="f1Title">极致速度</h3>
-          <p data-l10n="f1Desc">将作品编译为 JavaScript，运行速度比 Scratch 快 10–100 倍</p>
+          <p data-l10n="f1Desc">将作品编译为 JavaScript，运行速度比 Scratch 快 10–100 倍。</p>
         </div>
         <div class="feature-card" data-delay="50">
           <div class="glow-line"></div>
-          <span class="icon">📊</span>
-          <h3 data-l10n="f2Title">作品分析器</h3>
-          <p data-l10n="f2Desc">精打细造的分析器，帮您分析作品结构和积木使用情况</p>
+          <img alt="addons" class="icon" src="assets/feat-addons.svg" width="50">
+          <h3 data-l10n="f2Title">丰富的插件</h3>
+          <p data-l10n="f2Desc">新添加9款插件，只为更高效地编程。</p>
         </div>
         <div class="feature-card" data-delay="100">
           <div class="glow-line"></div>
-          <span class="icon">🎨</span>
-          <h3 data-l10n="f4Title">强大编辑器</h3>
-          <p data-l10n="f4Desc">支持透明度、洋葱皮、高级绘图工具，造型设计更自由</p>
+          <img alt="hm-project-analysis" class="icon" src="assets/feat-hm-project-analysis.svg" width="50">
+          <h3 data-l10n="f3Title">作品分析器</h3>
+          <p data-l10n="f3Desc">精打细造的分析器，帮您分析作品结构和积木使用情况。</p>
         </div>
         <div class="feature-card" data-delay="150">
           <div class="glow-line"></div>
-          <span class="icon">📦</span>
+          <img alt="custom-editor-theme" class="icon" src="assets/feat-custom-editor-theme.svg" width="50">
+          <h3 data-l10n="f4Title">可自定义主题的编辑器</h3>
+          <p data-l10n="f4Desc">插件提供了多达20个设置项和11种预设，供你自由定制编辑器主题。</p>
+        </div>
+        <div class="feature-card" data-delay=200">
+          <div class="glow-line"></div>
+          <img alt="packager" class="icon" src="assets/feat-packager.svg" width="50">
           <h3 data-l10n="f5Title">一键打包</h3>
           <p data-l10n="f5Desc">打包为 HTML、可执行文件或跨平台应用，方便分享和分发</p>
         </div>
@@ -1012,7 +1127,7 @@
     <section class="install-section" id="download">
       <div class="section-label" data-l10n="installLabel">✦ 下载 ✦</div>
       <h2 class="section-title" data-l10n="installTitle">跨平台支持</h2>
-      <p style="text-align: center; color: var(--text-muted); font-size: 17px;" id="versionDisplay">v1.0.0</p>
+      <p style="text-align: center; color: var(--text-muted); font-size: 17px;" id="versionDisplay">v1.0.5</p>
       <p class="section-desc" data-l10n="installDesc">支持 Windows、macOS 和 Linux，随时随地开始创作</p>
       <div class="install-grid" id="installGrid">
         <div class="install-card" data-delay="0">
@@ -1081,20 +1196,22 @@
       const translations = {
         'zh-cn': {
           heroDesc: '兼顾实用、快速与美观',
-          downloadNow: '立即下载',
+          downloadNow: '获取桌面端',
           learnMore: '了解更多',
           onlineEditor: '在线编辑器',
           featuresLabel: '✦ 功能特性 ✦',
           featuresTitle: '让创作更高效',
           featuresDesc: 'HyperMimic 为 Scratch 创作者量身打造，提供更快的速度、更强大的工具',
           f1Title: '极致速度',
-          f1Desc: '将作品编译为 JavaScript，运行速度比 Scratch 快 10–100 倍',
-          f2Title: '作品分析器',
-          f2Desc: '精打细造的分析器，帮您分析作品结构和积木使用情况',
-          f4Title: '强大编辑器',
-          f4Desc: '支持透明度、洋葱皮、高级绘图工具，造型设计更自由',
+          f1Desc: '将作品编译为 JavaScript，运行速度比 Scratch 快 10–100 倍。',
+          f2Title: '丰富的插件',
+          f2Desc: '新添加9款插件，只为更高效地编程。',
+          f3Title: '作品分析器',
+          f3Desc: '精打细造的分析器，帮您分析作品结构和积木使用情况。',
+          f4Title: '可自定义主题的编辑器',
+          f4Desc: '“自定义编辑器主题”插件内提供了多达20个设置项和11种预设，供你自由定制编辑器主题。',
           f5Title: '一键打包',
-          f5Desc: '打包为 HTML、可执行文件或跨平台应用，方便分享和分发',
+          f5Desc: '打包为 HTML、可执行文件或跨平台应用，方便分享和分发。',
           installLabel: '✦ 下载 ✦',
           installTitle: '跨平台支持',
           installDesc: '支持 Windows、macOS 和 Linux，随时随地开始创作',
@@ -1137,23 +1254,28 @@
           desc_linux_arm64: 'Linux ARM64',
           desc_linux_armv7l: 'Linux ARMv7l',
           noChangelog: '暂无更新日志',
+          showcaseLabel: '✦ 视觉预览 ✦',
+          showcaseTitle: '看见每一处用心',
+          showcaseDesc: '真正为创作者设计的界面，每一个细节都恰到好处',
         },
         'en': {
           heroDesc: 'Combining practicality, speed, and elegance',
-          downloadNow: 'Download Now',
+          downloadNow: 'Get Desktop',
           learnMore: 'Learn More',
           onlineEditor: 'Online Editor',
           featuresLabel: '✦ Features ✦',
           featuresTitle: 'Create More Efficiently',
           featuresDesc: 'HyperMimic is built for Scratch creators, offering faster speed and more powerful tools.',
           f1Title: 'Blazing Speed',
-          f1Desc: 'Compiles projects to JavaScript, runs 10–100x faster than Scratch',
-          f2Title: 'Project Analyzer',
-          f2Desc: 'A meticulously crafted analyzer to analyze project structure and block usage',
-          f4Title: 'Powerful Editor',
-          f4Desc: 'Supports transparency, onion skinning, advanced drawing tools',
+          f1Desc: 'Compiles projects to JavaScript, runs 10–100x faster than Scratch.',
+          f2Title: 'Rich Addons',
+          f2Desc: '9 new addons have been added for more efficient coding.',
+          f3Title: 'Project Analyzer',
+          f3Desc: 'A meticulously crafted analyzer to analyze project structure and block usage.',
+          f4Title: 'Theme-customizable editor',
+          f4Desc: '"Custom editor theme" addon offers up to 20 settings and 11 presets, allowing you to freely customize the editor theme.',
           f5Title: 'One-click Packager',
-          f5Desc: 'Package as HTML, executables, or cross-platform apps for easy sharing',
+          f5Desc: 'Package as HTML, executables, or cross-platform apps for easy sharing.',
           installLabel: '✦ Download ✦',
           installTitle: 'Cross-Platform',
           installDesc: 'Supports Windows, macOS, and Linux. Start creating anywhere.',
@@ -1196,11 +1318,15 @@
           desc_linux_arm64: 'Linux ARM64',
           desc_linux_armv7l: 'Linux ARMv7l',
           noChangelog: 'No changelog available',
+          showcaseLabel: '✦ Live Preview ✦',
+          showcaseTitle: 'Crafted Down to the Details',
+          showcaseDesc: 'An interface truly designed for creators, with every detail just right',
         }
       };
 
       // ===== 版本配置 =====
       const VERSIONS = [
+        { label: 'v1.0.5', value: '1.0.5' },
         { label: 'v1.0.1', value: '1.0.1' },
         { label: 'v1.0.0', value: '1.0.0' }
       ];
@@ -1279,6 +1405,7 @@
           renderModal(currentOS);
         }
         renderChangelog();
+        if (window.__updateShowcaseLang) window.__updateShowcaseLang(lang);
       }
 
       langToggle.addEventListener('click', function() {
@@ -1308,7 +1435,7 @@
 
       function renderModal(os) {
         currentOS = os;
-        const version = "1.0.1";
+        const version = "1.0.5";
         currentVersion = version;
         const t = translations[currentLang] || translations['zh-cn'];
         const files = buildFilesForVersion(os, version);
@@ -1464,6 +1591,56 @@
           }
         });
       });
+
+      // ===== 视觉预览 (Showcase) 交互 =====
+      const showcaseSection = document.getElementById('showcase');
+      const showcaseWindow = document.getElementById('showcaseWindow');
+      const showcaseStage = document.querySelector('.showcase-stage');
+
+      // 语言同步：由 setLanguage() 统一调用，保证单一信息源
+      window.__updateShowcaseLang = function(lang) {
+        const isZh = lang === 'zh-cn';
+        document.querySelectorAll('#screenshotFrame .screenshot').forEach(function(s) {
+          const match = (isZh && s.classList.contains('screenshot-zh')) ||
+                        (!isZh && s.classList.contains('screenshot-en'));
+          s.classList.toggle('active', match);
+        });
+      };
+
+      // 3D 鼠标跟随倾斜（仅支持 hover 的设备）
+      if (showcaseStage && showcaseWindow && window.matchMedia('(hover: hover)').matches) {
+        showcaseStage.addEventListener('mousemove', function(e) {
+          const r = showcaseStage.getBoundingClientRect();
+          const x = ((e.clientX - r.left) / r.width - 0.5) * 2;   // -1 .. 1
+          const y = ((e.clientY - r.top) / r.height - 0.5) * 2;    // -1 .. 1
+          showcaseWindow.style.setProperty('--tilt-y', (x * 4).toFixed(2));   // rotateY
+          showcaseWindow.style.setProperty('--tilt-x', (-y * 3).toFixed(2));  // rotateX
+        });
+        showcaseStage.addEventListener('mouseleave', function() {
+          showcaseWindow.style.setProperty('--tilt-y', '0');
+          showcaseWindow.style.setProperty('--tilt-x', '0');
+        });
+      }
+
+      // 入场动画
+      if (showcaseSection) {
+        if ('IntersectionObserver' in window) {
+          const so = new IntersectionObserver(function(entries) {
+            entries.forEach(function(en) {
+              if (en.isIntersecting) {
+                showcaseSection.classList.add('in-view');
+                so.unobserve(en.target);
+              }
+            });
+          }, { threshold: 0.12 });
+          so.observe(showcaseSection);
+        } else {
+          showcaseSection.classList.add('in-view');
+        }
+      }
+
+      // 初始化：与当前语言保持一致
+      if (window.__updateShowcaseLang) window.__updateShowcaseLang(currentLang);
 
     })();
   </script>
