@@ -1127,7 +1127,7 @@
     <section class="install-section" id="download">
       <div class="section-label" data-l10n="installLabel">✦ 下载 ✦</div>
       <h2 class="section-title" data-l10n="installTitle">跨平台支持</h2>
-      <p style="text-align: center; color: var(--text-muted); font-size: 17px;" id="versionDisplay">v1.0.5</p>
+      <p style="text-align: center; color: var(--text-muted); font-size: 17px;" id="versionDisplay">v1.0.6</p>
       <p class="section-desc" data-l10n="installDesc">支持 Windows、macOS 和 Linux，随时随地开始创作</p>
       <div class="install-grid" id="installGrid">
         <div class="install-card" data-delay="0">
@@ -1326,6 +1326,7 @@
 
       // ===== 版本配置 =====
       const VERSIONS = [
+        { label: 'v1.0.6', value: '1.0.6' },
         { label: 'v1.0.5', value: '1.0.5' },
         { label: 'v1.0.1', value: '1.0.1' },
         { label: 'v1.0.0', value: '1.0.0' }
@@ -1435,7 +1436,7 @@
 
       function renderModal(os) {
         currentOS = os;
-        const version = "1.0.5";
+        const version = "1.0.6";
         currentVersion = version;
         const t = translations[currentLang] || translations['zh-cn'];
         const files = buildFilesForVersion(os, version);
