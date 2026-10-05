@@ -6,7 +6,6 @@ static
 addon-preview.html
 addons.html
 ballCat.svg
-changelog.json
 credits.html
 editor.html
 embed.html
@@ -19,3 +18,4 @@ manifest.webmanifest
 robots.txt
 sw.js
 /index.html
+packager/

@@ -4,7 +4,7 @@
     <title>Update Available</title>
     <meta name="robots" content="noindex">
     <meta charset="utf-8">
-    <noscript><meta http-equiv="Refresh" content="0; url=https://hypermimic.netlify.app/desktop"></noscript>
+    <noscript><meta http-equiv="Refresh" content="0; url=https://hypermimic.netlify.app/desktop/#download"></noscript>
     <style>
       @media (prefers-color-scheme: dark) {
         :root {
@@ -17,7 +17,10 @@
   <body>
     <script>
       function redirectRelease () {
-        location.replace('/' + location.search);
+        // This site's root is the editor, not the desktop download page (upstream TurboWarp
+        // serves the desktop page from /, which is why this used to be '/').
+        // Jump straight to the download section.
+        location.replace('/desktop/#download');
       }
 
       function redirectBeta () {
